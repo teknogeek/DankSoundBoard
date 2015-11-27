@@ -2,8 +2,6 @@ package pw.tekno.soundboard;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,11 +42,7 @@ public class Main
 		quit.setLocation(312, 329);
 		quit.setPressedIcon(new ImageIcon(Main.class.getResource("/Images/QuitPush.png")));
 
-		quit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		quit.addActionListener(e -> System.exit(0));
 
 		DefaultListModel<String> model = new DefaultListModel<>();
 		File temp = new File("files\\sound.wav");
@@ -88,14 +82,9 @@ public class Main
 		play.setSize(54, 54);
 		play.setLocation(21, 329);
 		play.setPressedIcon(new ImageIcon(Main.class.getResource("/Images/PlayPush.png")));
-		play.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				String songName = "files\\" + songList.getSelectedValue() + ".wav";
-				Utils.playSound(songName);
-			}
+		play.addActionListener(e -> {
+			String songName = "files\\" + songList.getSelectedValue() + ".wav";
+			Utils.playSound(songName);
 		});
 
 		//STOP SONG
@@ -103,14 +92,7 @@ public class Main
 		stop.setSize(54 , 54);
 		stop.setLocation(80, 329);
 		stop.setPressedIcon(new ImageIcon(Main.class.getResource("/Images/StopPush.png")));
-		stop.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				Utils.stop();
-			}
-		});
+		stop.addActionListener(e -> Utils.stop());
 
 
 		//REMOVE SONG
@@ -118,24 +100,19 @@ public class Main
 		remove.setSize(54, 54);
 		remove.setLocation(249 , 329);
 		remove.setPressedIcon(new ImageIcon(Main.class.getResource("/Images/DeletePush.png")));
-		remove.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
+		remove.addActionListener(e -> {
+			Utils.stop();
+			int index = songList.getSelectedIndex();
+			String songName = model.get(index);
+			try
 			{
-				Utils.stop();
-				int index = songList.getSelectedIndex();
-				String songName = model.get(index);
-				try
-				{
-					System.gc();
-					Files.delete(Paths.get("files\\" + songName + ".wav"));
-					model.removeElementAt(index);
-				}
-				catch(IOException e1)
-				{
-					e1.printStackTrace();
-				}
+				System.gc();
+				Files.delete(Paths.get("files\\" + songName + ".wav"));
+				model.removeElementAt(index);
+			}
+			catch(IOException e1)
+			{
+				e1.printStackTrace();
 			}
 		});
 
@@ -144,20 +121,15 @@ public class Main
 		add.setSize(48, 48);
 		add.setLocation(544, 277);
 		add.setPressedIcon(new ImageIcon(Main.class.getResource("/Images/AddPush.png")));
-		add.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
+		add.addActionListener(e -> {
+			try
 			{
-				try
-				{
-					Utils.downloadVideo(linkInput.getText(), nameInput.getText());
-					model.addElement(nameInput.getText());
-				}
-				catch(Exception e1)
-				{
-					e1.printStackTrace();
-				}
+				Utils.downloadVideo(linkInput.getText(), nameInput.getText());
+				model.addElement(nameInput.getText());
+			}
+			catch(Exception e1)
+			{
+				e1.printStackTrace();
 			}
 		});
 
